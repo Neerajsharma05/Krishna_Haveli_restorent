@@ -1,10 +1,13 @@
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 
+// Popular dish images
 import dalMakhani from "@/assets/dal-makhani.jpg";
 import chickenBiryani from "@/assets/chicken-biryani.jpg";
 import paneerAngara from "@/assets/paneer-angara.jpg";
 import thali from "@/assets/north-indian-thali.jpg";
+
+// Vegetarian dishes
 import butterChicken from "@/assets/butter-chicken.jpg";
 import shahiPaneer from "@/assets/shahi-paneer.jpg";
 import kadaiPaneer from "@/assets/kadai-paneer.jpg";
@@ -13,31 +16,60 @@ import malaiKofta from "@/assets/malai-kofta.jpg";
 import choleBhature from "@/assets/chole-bhature.jpg";
 import rajmaChawal from "@/assets/rajma-chawal.jpg";
 import palakPaneer from "@/assets/palak-paneer.jpg";
+
+// Non-vegetarian dishes
 import chickenTikka from "@/assets/chicken-tikka.jpg";
 import tandooriChicken from "@/assets/tandoori-chicken.jpg";
 import muttonCurry from "@/assets/mutton-curry.jpg";
 import fishCurry from "@/assets/fish-curry.jpg";
 import chickenKorma from "@/assets/chicken-korma.jpg";
+
+// Breads
 import garlicNaan from "@/assets/garlic-naan.jpg";
 import butterNaan from "@/assets/butter-naan.jpg";
 import tandooriRoti from "@/assets/tandoori-roti.jpg";
 import lacchaParatha from "@/assets/laccha-paratha.jpg";
+
+// Rice
 import jeeraRice from "@/assets/jeera-rice.jpg";
 import vegPulao from "@/assets/veg-pulao.jpg";
 import chickenFriedRice from "@/assets/chicken-fried-rice.jpg";
+
+// Starters
 import samosa from "@/assets/samosa.jpg";
 import paneerPakora from "@/assets/paneer-pakora.jpg";
 import haraBharaKebab from "@/assets/hara-bhara-kebab.jpg";
 import springRoll from "@/assets/spring-roll.jpg";
+
+// Desserts
 import gulabJamun from "@/assets/gulab-jamun.jpg";
 import rasmalai from "@/assets/rasmalai.jpg";
 import gajarHalwa from "@/assets/gajar-ka-halwa.jpg";
 import kheer from "@/assets/rice-kheer.jpg";
-// import lassi from "@/assets/sweet-lassi.jpg";
+
+// Beverages
 import masalaChaas from "@/assets/masala-chaas.jpg";
 import masalaTea from "@/assets/masala-tea.jpg";
 import coldCoffee from "@/assets/cold-coffee.jpg";
 
+// Preload an image before displaying the full menu
+const preloadImage = (src) => {
+  return new Promise((resolve) => {
+    const image = new Image();
+
+    image.onload = () => resolve(true);
+    image.onerror = () => resolve(false);
+
+    image.src = src;
+
+    // Resolve immediately if the image is already cached
+    if (image.complete) {
+      resolve(image.naturalWidth > 0);
+    }
+  });
+};
+
+// Additional menu dishes
 const additionalDishes = [
   // Main Course - Vegetarian
   {
@@ -191,6 +223,7 @@ const additionalDishes = [
     img: kheer,
   },
 
+  // Beverages
   {
     name: "Masala Chaas",
     desc: "Cooling buttermilk blended with roasted cumin and fresh herbs.",
@@ -208,8 +241,7 @@ const additionalDishes = [
   },
 ];
 
-
-
+// Initially visible popular dishes
 const dishes = [
   {
     name: "Dal Makhani",
@@ -233,57 +265,63 @@ const dishes = [
   },
 ];
 
+// Complete menu
+const allDishes = [...dishes, ...additionalDishes];
+
 const PopularDishes = () => {
   const [showFullMenu, setShowFullMenu] = useState(false);
-  const sectionRef = useRef(null);
-  const itemRefs = useRef([]);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Display menu items
-  const allDishes = [...dishes, ...additionalDishes];
+  const sectionRef = useRef(null);
+
+  // Currently visible dishes
   const visibleDishes = showFullMenu ? allDishes : dishes;
 
-  const toggleMenu = () => {
+  // Toggle menu with image preloading
+  const toggleMenu = async () => {
+    if (isLoading) return;
+
+    // Collapse full menu
     if (showFullMenu) {
-      // Collapsing: scroll back to the top of the section
       setShowFullMenu(false);
-      sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    } else {
+
+      sectionRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      // Preload all additional menu images
+      await Promise.all(
+        additionalDishes.map((dish) => preloadImage(dish.img))
+      );
+
+      // Display menu after preloading
       setShowFullMenu(true);
+    } catch (error) {
+      console.error("Menu loading error:", error);
+
+      // Still show the menu if preloading fails
+      setShowFullMenu(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  // Lazy load images using Intersection Observer
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            const img = entry.target;
-            const src = img.dataset.src;
-            if (src) {
-              img.src = src;
-              img.classList.remove("opacity-0");
-              img.classList.add("opacity-100");
-              img.classList.add("transition-opacity", "duration-700", "ease-in-out");
-            }
-            observer.unobserve(img);
-          }
-        });
-      },
-      { threshold: 0.1, rootMargin: "50px" }
-    );
-
-    itemRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-
-    return () => observer.disconnect();
-  }, [visibleDishes]);
-
   return (
-    <section id="menu" ref={sectionRef} className="section-padding bg-accent">
+    <section
+      id="menu"
+      ref={sectionRef}
+      className="section-padding bg-accent"
+    >
       <div className="mx-auto max-w-7xl text-center">
 
+        {/* Section Header */}
         <p className="mb-3 font-body text-sm font-semibold uppercase tracking-widest text-secondary">
           Our Specialties
         </p>
@@ -297,26 +335,34 @@ const PopularDishes = () => {
           prepared fresh every day.
         </p>
 
+        {/* Dishes Grid */}
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {visibleDishes.map((dish, index) => (
             <div
               key={`${dish.name}-${index}`}
-              ref={(el) => (itemRefs.current[index] = el)}
-              className="group overflow-hidden rounded-2xl bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-1 opacity-0 translate-y-4"
+              className="group overflow-hidden rounded-2xl bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
               style={{
-                animation: `fadeUp 0.6s ease-out forwards`,
+                animation: "fadeUp 0.6s ease-out both",
                 animationDelay: `${Math.min(index * 50, 300)}ms`,
               }}
             >
-              <div className="aspect-square overflow-hidden">
+              {/* Dish Image */}
+              <div className="aspect-square overflow-hidden bg-muted">
                 <img
-                  data-src={dish.img}
+                  src={dish.img}
                   alt={dish.name}
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 opacity-0"
-                  loading="lazy"
+                  loading={index < 4 ? "eager" : "lazy"}
+                  decoding="async"
+                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  onError={() => {
+                    console.error(
+                      `Failed to load image: ${dish.name}`
+                    );
+                  }}
                 />
               </div>
 
+              {/* Dish Information */}
               <div className="p-5 text-left">
                 <h3 className="mb-1 font-display text-lg font-semibold text-foreground">
                   {dish.name}
@@ -330,11 +376,33 @@ const PopularDishes = () => {
           ))}
         </div>
 
+        {/* View Full Menu Button */}
         <button
+          type="button"
           onClick={toggleMenu}
-          className="mt-12 inline-flex items-center gap-2 rounded-lg bg-secondary px-8 py-4 font-body text-base font-semibold text-secondary-foreground shadow-md transition-transform hover:scale-105"
+          disabled={isLoading}
+          aria-expanded={showFullMenu}
+          aria-busy={isLoading}
+          className={`mt-12 inline-flex min-w-[210px] items-center justify-center gap-3 rounded-lg bg-secondary px-8 py-4 font-body text-base font-semibold text-secondary-foreground shadow-md transition-all duration-300 hover:scale-105 ${
+            isLoading
+              ? "cursor-wait opacity-80"
+              : "cursor-pointer"
+          }`}
         >
-          {showFullMenu ? "Show Less" : "View Full Menu"}
+          {isLoading ? (
+            <>
+              {/* Loading Spinner */}
+              <span
+                className="h-5 w-5 animate-spin rounded-full border-2 border-current border-t-transparent"
+                aria-hidden="true"
+              />
+              <span>Loading Menu...</span>
+            </>
+          ) : showFullMenu ? (
+            "Show Less"
+          ) : (
+            "View Full Menu"
+          )}
         </button>
 
       </div>
