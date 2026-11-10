@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500&family=Poppins:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 30 33% 96%;
+    --foreground: 0 0% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+    --primary: 350 59% 30%;
+    --primary-foreground: 30 33% 96%;
+    --secondary: 28 45% 64%;
+    --secondary-foreground: 0 0% 12%;
+    --muted: 30 25% 92%;
+    --muted-foreground: 0 0% 40%;
+    --accent: 30 30% 91%;
+    --accent-foreground: 0 0% 12%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 30 20% 85%;
+    --input: 30 20% 85%;
+    --ring: 350 59% 30%;
+    --radius: 0.75rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+
+    --font-display: 'Playfair Display', Georgia, serif;
+    --font-body: 'Poppins', system-ui, sans-serif;
+
+    --gold-gradient: linear-gradient(135deg, hsl(28 45% 64%), hsl(35 55% 72%));
+    --hero-overlay: linear-gradient(to bottom, hsla(0 0% 0% / 0.2) 0%, hsla(0 0% 0% / 0.65) 100%);
+    --dark-overlay: linear-gradient(135deg, hsl(350 59% 18%) 0%, hsl(0 0% 8%) 100%);
+    --shadow-card: 0 4px 24px -4px hsla(0 0% 0% / 0.08);
+    --shadow-card-hover: 0 12px 32px -8px hsla(0 0% 0% / 0.15);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-4 py-16 md:px-8 md:py-24 lg:px-16 lg:py-32;
+  }
+  .section-heading {
+    font-family: var(--font-display);
+    @apply text-3xl md:text-4xl lg:text-5xl font-bold text-foreground;
+  }
+  .section-subheading {
+    @apply text-base md:text-lg text-muted-foreground max-w-2xl;
+  }
+}
+
+@layer utilities {
+  .hover-scale {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+  .animate-fade-up {
+    animation: fadeUp 0.6s ease-out both;
+  }
+  .animate-fade-up-delay-1 {
+    animation: fadeUp 0.6s 0.1s ease-out both;
+  }
+  .animate-fade-up-delay-2 {
+    animation: fadeUp 0.6s 0.2s ease-out both;
+  }
+  .animate-fade-up-delay-3 {
+    animation: fadeUp 0.6s 0.3s ease-out both;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
