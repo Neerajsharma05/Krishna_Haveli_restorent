@@ -51,9 +51,9 @@ const Navbar = () => {
               {l.label}
             </a>
           ))}
-          <a href="tel:1234567891" className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-body text-sm font-semibold text-primary-foreground">
+          {/* <a href="tel:1234567891" className="mt-2 flex items-center justify-center gap-2 rounded-lg bg-primary px-5 py-3 font-body text-sm font-semibold text-primary-foreground">
             <Phone className="h-4 w-4" /> Call Now
-          </a>
+          </a> */}
         </div>
       )}
     </nav>
