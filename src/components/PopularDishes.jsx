@@ -1,10 +1,11 @@
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 
 import dalMakhani from "@/assets/dal-makhani.jpg";
 import chickenBiryani from "@/assets/chicken-biryani.jpg";
 import paneerAngara from "@/assets/paneer-angara.jpg";
 import thali from "@/assets/north-indian-thali.jpg";
+
 import butterChicken from "@/assets/butter-chicken.jpg";
 import shahiPaneer from "@/assets/shahi-paneer.jpg";
 import kadaiPaneer from "@/assets/kadai-paneer.jpg";
@@ -13,33 +14,64 @@ import malaiKofta from "@/assets/malai-kofta.jpg";
 import choleBhature from "@/assets/chole-bhature.jpg";
 import rajmaChawal from "@/assets/rajma-chawal.jpg";
 import palakPaneer from "@/assets/palak-paneer.jpg";
+
 import chickenTikka from "@/assets/chicken-tikka.jpg";
 import tandooriChicken from "@/assets/tandoori-chicken.jpg";
 import muttonCurry from "@/assets/mutton-curry.jpg";
 import fishCurry from "@/assets/fish-curry.jpg";
 import chickenKorma from "@/assets/chicken-korma.jpg";
+
 import garlicNaan from "@/assets/garlic-naan.jpg";
 import butterNaan from "@/assets/butter-naan.jpg";
 import tandooriRoti from "@/assets/tandoori-roti.jpg";
 import lacchaParatha from "@/assets/laccha-paratha.jpg";
+
 import jeeraRice from "@/assets/jeera-rice.jpg";
 import vegPulao from "@/assets/veg-pulao.jpg";
 import chickenFriedRice from "@/assets/chicken-fried-rice.jpg";
+
 import samosa from "@/assets/samosa.jpg";
 import paneerPakora from "@/assets/paneer-pakora.jpg";
 import haraBharaKebab from "@/assets/hara-bhara-kebab.jpg";
 import springRoll from "@/assets/spring-roll.jpg";
+
 import gulabJamun from "@/assets/gulab-jamun.jpg";
 import rasmalai from "@/assets/rasmalai.jpg";
 import gajarHalwa from "@/assets/gajar-ka-halwa.jpg";
 import kheer from "@/assets/rice-kheer.jpg";
-// import lassi from "@/assets/sweet-lassi.jpg";
+
+import sweetLassi from "@/assets/sweet-lassi.jpg";
 import masalaChaas from "@/assets/masala-chaas.jpg";
 import masalaTea from "@/assets/masala-tea.jpg";
 import coldCoffee from "@/assets/cold-coffee.jpg";
 
+// Main popular dishes
+const dishes = [
+  {
+    name: "Dal Makhani",
+    desc: "Creamy slow-cooked lentils with authentic Indian spices.",
+    img: dalMakhani,
+  },
+  {
+    name: "Chicken Biryani",
+    desc: "Aromatic basmati rice with perfectly cooked chicken.",
+    img: chickenBiryani,
+  },
+  {
+    name: "Paneer Angara",
+    desc: "Rich smoky paneer curry loved by vegetarians.",
+    img: paneerAngara,
+  },
+  {
+    name: "North Indian Thali",
+    desc: "A complete traditional meal with fresh breads and curries.",
+    img: thali,
+  },
+];
+
+// Additional menu dishes
 const additionalDishes = [
-  // Main Course - Vegetarian
+  // Vegetarian Main Course
   {
     name: "Shahi Paneer",
     desc: "Soft paneer cubes cooked in a rich creamy tomato and cashew gravy.",
@@ -71,7 +103,7 @@ const additionalDishes = [
     img: rajmaChawal,
   },
 
-  // Main Course - Non Vegetarian
+  // Non-Vegetarian Main Course
   {
     name: "Butter Chicken",
     desc: "Tender chicken pieces simmered in a buttery tomato-based gravy.",
@@ -191,6 +223,12 @@ const additionalDishes = [
     img: kheer,
   },
 
+  // Beverages
+  {
+    name: "Sweet Lassi",
+    desc: "Refreshing Punjabi yogurt drink topped with a creamy layer.",
+    img: sweetLassi,
+  },
   {
     name: "Masala Chaas",
     desc: "Cooling buttermilk blended with roasted cumin and fresh herbs.",
@@ -208,52 +246,30 @@ const additionalDishes = [
   },
 ];
 
-
-
-const dishes = [
-  {
-    name: "Dal Makhani",
-    desc: "Creamy slow-cooked lentils with authentic Indian spices.",
-    img: dalMakhani,
-  },
-  {
-    name: "Chicken Biryani",
-    desc: "Aromatic basmati rice with perfectly cooked chicken.",
-    img: chickenBiryani,
-  },
-  {
-    name: "Paneer Angara",
-    desc: "Rich smoky paneer curry loved by vegetarians.",
-    img: paneerAngara,
-  },
-  {
-    name: "North Indian Thali",
-    desc: "A complete traditional meal with fresh breads and curries.",
-    img: thali,
-  },
-];
+// Combined menu - created once outside the component
+const allDishes = [...dishes, ...additionalDishes];
 
 const PopularDishes = () => {
   const [showFullMenu, setShowFullMenu] = useState(false);
-  const sectionRef = useRef(null);
 
-  // Display menu items
-  const visibleDishes = showFullMenu
-    ? [...dishes, ...additionalDishes]
-    : dishes;
+  const visibleDishes = showFullMenu ? allDishes : dishes;
 
   const toggleMenu = () => {
     if (showFullMenu) {
-      // Collapsing: scroll back to the top of the section
       setShowFullMenu(false);
-      sectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+
+      // Scroll back to menu section
+      document.getElementById("menu")?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
     } else {
       setShowFullMenu(true);
     }
   };
 
   return (
-    <section id="menu" ref={sectionRef} className="section-padding bg-accent">
+    <section id="menu" className="section-padding bg-accent">
       <div className="mx-auto max-w-7xl text-center">
 
         <p className="mb-3 font-body text-sm font-semibold uppercase tracking-widest text-secondary">
@@ -272,18 +288,28 @@ const PopularDishes = () => {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {visibleDishes.map((dish, index) => (
             <div
-              key={`${dish.name}-${index}`}
-              className="group overflow-hidden rounded-2xl bg-card shadow-[var(--shadow-card)] transition-shadow duration-300 hover:shadow-[var(--shadow-card-hover)]"
+              key={dish.name}
+              className="group overflow-hidden rounded-2xl bg-card shadow-[var(--shadow-card)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[var(--shadow-card-hover)]"
+              style={{
+                animation: "fadeUp 0.6s ease-out both",
+                animationDelay: `${Math.min(index * 40, 300)}ms`,
+              }}
             >
-              <div className="aspect-square overflow-hidden">
+              {/* Dish Image */}
+              <div className="aspect-square overflow-hidden bg-muted">
                 <img
                   src={dish.img}
                   alt={dish.name}
+                  loading={index < 4 ? "eager" : "lazy"}
+                  decoding="async"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading="lazy"
+                  onError={(e) => {
+                    console.error(`Image failed to load: ${dish.name}`, dish.img);
+                  }}
                 />
               </div>
 
+              {/* Dish Details */}
               <div className="p-5 text-left">
                 <h3 className="mb-1 font-display text-lg font-semibold text-foreground">
                   {dish.name}
@@ -297,8 +323,11 @@ const PopularDishes = () => {
           ))}
         </div>
 
+        {/* View Full Menu Button */}
         <button
+          type="button"
           onClick={toggleMenu}
+          aria-expanded={showFullMenu}
           className="mt-12 inline-flex items-center gap-2 rounded-lg bg-secondary px-8 py-4 font-body text-base font-semibold text-secondary-foreground shadow-md transition-transform hover:scale-105"
         >
           {showFullMenu ? "Show Less" : "View Full Menu"}
